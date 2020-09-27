@@ -1,0 +1,38 @@
+import os
+import datetime
+import pymysql
+
+#get username
+username = os.environ.get('USERNAME')
+
+#conection
+
+connection = pymysql.connect( host='localhost',
+                            user = username,
+                            password = '',
+                            db='Chinook')
+
+try: 
+    #run query  
+    with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        cursor.execute("update Friends set age = 22 where name = 'Bob';")
+        # cursor.execute("update Friends set age = %s where name = %s;", (23, 'Bob'))
+        connection.commit()
+        
+finally:
+    #close connection sql
+    connection.close()
+
+
+
+    ###update many lines
+
+
+    try: 
+    #run query  
+    with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        rows = [(23, 'Bob'), 
+        (24, 'Jim'),
+        (25, 'Fred')]
+        cursor.executemany("update Friends set age = %s where name = %s;", rows)
+        connection.commit()

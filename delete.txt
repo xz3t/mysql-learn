@@ -1,0 +1,48 @@
+import os
+import datetime
+import pymysql
+
+#get username
+username = os.environ.get('USERNAME')
+
+#conection
+
+connection = pymysql.connect( host='localhost',
+                            user = username,
+                            password = '',
+                            db='Chinook')
+
+try: 
+    #run query  
+    with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        rows = cursor.execute("delete from Friends where name = 'Bob';")
+        connection.commit()
+        
+finally:
+    #close connection sql
+    connection.close()
+
+
+#alternate delte
+
+          rows = cursor.execute("delete from Friends where name = %s;", 'Bob')
+        connection.commit()
+
+
+  #delete many
+
+
+        try: 
+    #run query  
+    with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        rows = cursor.executemany("delete from Friends where name = %s;", ['Bob', 'jim'])
+        connection.commit()
+
+
+# delete multiple
+        try: 
+    #run query  
+    with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        names = ['jim', 'bob']
+        cursor.execute("delete from Friends where name in (%s,%s)", names))
+        connection.commit()
